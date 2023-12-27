@@ -1,2 +1,2 @@
-# test
+# gogreen-test
 resources by modules
