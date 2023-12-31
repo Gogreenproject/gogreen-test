@@ -78,7 +78,7 @@ module "app_asg1" {
   source              = "./modules/autoscaling_group"
   vpc_zone_identifier = [module.subnet-priv-1a.subnet_id]
   desired_capacity  = 1
-  max_size          = 1
+  max_size          = 5
   min_size          = 1
   target_group_arns = [module.appTier-tg.tg_arn]
   launch_template   = module.apptier_lt.lt_id
@@ -90,7 +90,7 @@ module "app_asg2" {
   source              = "./modules/autoscaling_group"
   vpc_zone_identifier = [module.subnet-priv-1b.subnet_id]
   desired_capacity  = 1
-  max_size          = 1
+  max_size          = 5
   min_size          = 1
   target_group_arns = [module.appTier-tg.tg_arn]
   launch_template   = module.apptier_lt.lt_id

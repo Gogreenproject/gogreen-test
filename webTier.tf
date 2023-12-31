@@ -1,4 +1,4 @@
-#subnet for web layer
+# Subnet for web layer
 module "subnet-pub-1a" {
   source      = "./modules/subnet"
   vpc_id      = module.my_vpc.my_vpc_id
@@ -6,7 +6,6 @@ module "subnet-pub-1a" {
   az_subnet   = var.az_subnet_1
   public      = var.public_1
   tags_subnet = var.tags_subnet_1
-
 }
 module "subnet-pub-1b" {
   source      = "./modules/subnet"
@@ -15,9 +14,7 @@ module "subnet-pub-1b" {
   az_subnet   = var.az_subnet_2
   public      = var.public_2
   tags_subnet = var.tags_subnet_2
-
 }
-
 # Route table association
 module "rt_ass_pub_1a" {
   source         = "./modules/rt_association"
@@ -29,8 +26,7 @@ module "rt_ass_pub_1b" {
   subnet_id      = module.subnet-pub-1b.subnet_id
   route_table_id = module.public_rt.rt_id
 }
-
-#Security Group
+# Security Group
 module "sg_alb_web" {
   source         = "./modules/security_group"
   ingress_rules  = var.ingress_rules_web
@@ -41,8 +37,7 @@ module "sg_alb_web" {
   #security_groups = var.security_groups_web
   tags_sg = var.tags_sg_web
 }
-
-#Application load balancer 
+# Application load balancer 
 module "web-alb" {
   source = "./modules/application_load_balancer"
   name   = "tf-webtier-alb"
@@ -55,8 +50,7 @@ module "web-alb" {
 
   tags_alb = var.tags_alb_web
 }
-
-#Target group
+# Target group
 module "webTier-tg" {
   source   = "./modules/target_group"
   name     = "tf-webTier-tg"
@@ -65,8 +59,7 @@ module "webTier-tg" {
   vpc_id   = module.my_vpc.my_vpc_id
   tags_tg  = var.tags_web_tg
 }
-
-#Listener group
+# Listener group
 module "http_listener_web" {
   source   = "./modules/listener_group"
   lb_arn   = module.web-alb.alb_arn
@@ -76,14 +69,13 @@ module "http_listener_web" {
   #certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
   tg_arn = module.webTier-tg.tg_arn
 }
-
-#Autoscaling
+# Autoscaling
 module "web_asg1" {
   source              = "./modules/autoscaling_group"
   vpc_zone_identifier = [module.subnet-pub-1a.subnet_id]
   #  availability_zones = ["us-west-2a"]
   desired_capacity  = 1
-  max_size          = 1
+  max_size          = 6
   min_size          = 1
   target_group_arns = [module.webTier-tg.tg_arn]
   launch_template   = module.webtier_lt.lt_id
@@ -94,13 +86,12 @@ module "web_asg2" {
   vpc_zone_identifier = [module.subnet-pub-1b.subnet_id]
   #  availability_zones = ["us-west-2b"]
   desired_capacity  = 1
-  max_size          = 1
+  max_size          = 6
   min_size          = 1
   target_group_arns = [module.webTier-tg.tg_arn]
   launch_template   = module.webtier_lt.lt_id
 
 }
-
 # Security group for webserver
 module "sg_web_server" {
   source = "./modules/security_group"
@@ -120,6 +111,14 @@ module "sg_web_server" {
       protocol        = "tcp"
       cidr_blocks     = null
       security_groups = [module.sg_alb_web.sg_id]
+    },
+      {
+      description     = "allow on 22"
+      from_port       = 22
+      to_port         = 22
+      protocol        = "tcp"
+      cidr_blocks     = null
+      security_groups = [module.sg_alb_web.sg_id]
     }
   ] #var.ingress_rules_web_server
   vpc_id         = module.my_vpc.my_vpc_id
@@ -134,7 +133,6 @@ resource "aws_key_pair" "key" {
   key_name   = "tf-keypair"
   public_key = file("~/.ssh/id_ed25519.pub")
 }
-
 # Launch template
 module "webtier_lt" {
   source                 = "./modules/launch_template"

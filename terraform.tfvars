@@ -87,6 +87,36 @@ tags_nat = {
   Kind = "practice"
 }
 ##############################
+#bastion_host_sg 
+
+sg_name_bh = "bastion_host_sg"
+tags_sg_bh = {
+  Name = "tf-bastion_host_sg",
+  Kind = "practice"
+}
+    ingress_rules_bh = [
+      {
+      description     = "allow on 22"
+      from_port       = 22
+      to_port         = 22
+      protocol        = "tcp"
+      cidr_blocks     = ["0.0.0.0/0"]
+      security_groups = null
+      }
+    ]
+    egress_rules_bh = [
+      {
+       description     = "allow"
+       from_port       = 0
+       to_port         = 0
+       protocol        = "-1"
+       cidr_blocks     = ["0.0.0.0/0"]
+       security_groups = null
+  }
+    ]
+sg_description_bh = " SG for Bastion Host"
+
+##############################
 #sg_alb_web
 sg_name_web = "web-alb-sg"
 tags_sg_web = {

@@ -139,6 +139,31 @@ variable "tags_nat" {
   type = map(any)
 }
 ##############################
+#sg_alb_bh
+
+variable "ingress_rules_bh" {
+  type = list(any)
+}
+variable "sg_name_bh" {
+  type = string
+}
+variable "egress_rules_bh" {
+  type = list(any)
+}
+variable "sg_description_bh" {
+  type = string
+}
+# variable "security_groups_web" {
+#   type = list(any)
+# }
+variable "tags_sg_bh" {
+  type = map(any)
+}
+
+
+
+
+
 #sg_alb_web
 
 variable "ingress_rules_web" {

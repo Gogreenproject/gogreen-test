@@ -51,9 +51,12 @@ module "sg_rds" {
     }
 
   ]
+  
   vpc_id         = module.my_vpc.my_vpc_id
   sg_name        = "tf_sg_rds"
   sg_description = "SG for rds"
+  
+  
   egress_rules = [
     {
       description     = "allow"
@@ -64,7 +67,7 @@ module "sg_rds" {
       security_groups = [module.sg_app_server.sg_id]
     }
   ]
-  #security_groups = var.security_groups_app_server
+  
   tags_sg = {
     Name = "tf-db-sg",
     Kind = "practice"
