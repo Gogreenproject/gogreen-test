@@ -117,6 +117,14 @@ module "sg_app_server" {
       protocol        = "tcp"
       cidr_blocks     = null
       security_groups = [module.sg_alb_web.sg_id]
+    },
+    {
+      description     = "allow on 22 through Bastion"
+      from_port       = 22
+      to_port         = 22
+      protocol        = "tcp"
+      cidr_blocks     = null
+      security_groups = [module.bastion_host_sg.sg_id]
     }
 
   ] 

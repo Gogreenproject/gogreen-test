@@ -1,5 +1,5 @@
 variable ingress_rules{
-    type = list
+    type = list(any)
 }
 
 variable vpc_id{

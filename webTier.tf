@@ -113,12 +113,12 @@ module "sg_web_server" {
       security_groups = [module.sg_alb_web.sg_id]
     },
       {
-      description     = "allow on 22"
+      description     = "allow on 22 through Bastion"
       from_port       = 22
       to_port         = 22
       protocol        = "tcp"
-      cidr_blocks     = null
-      security_groups = [module.sg_alb_web.sg_id]
+      cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
+      security_groups = [module.bastion_host_sg.sg_id]
     }
   ] #var.ingress_rules_web_server
   vpc_id         = module.my_vpc.my_vpc_id
@@ -129,8 +129,8 @@ module "sg_web_server" {
   tags_sg = var.tags_sg_web_server
 }
 # AWS Key Pair
-resource "aws_key_pair" "key" {
-  key_name   = "tf-keypair"
+resource "aws_key_pair" "key01" {
+  key_name   = "tf-keypair-web"
   public_key = file("~/.ssh/id_ed25519.pub")
 }
 # Launch template
@@ -139,7 +139,7 @@ module "webtier_lt" {
   name_prefix            = "tf-webserver-"
   image_id               = "ami-01450e8988a4e7f44"
   instance_type          = "t2.micro"
-  key_name               = "tf-keypair"
+  key_name               = "tf-keypair-web"
   user_data              = filebase64("${path.module}/web.sh")
   vpc_security_group_ids = [module.sg_web_server.sg_id]
   tags_lt = {

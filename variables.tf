@@ -159,11 +159,7 @@ variable "sg_description_bh" {
 variable "tags_sg_bh" {
   type = map(any)
 }
-
-
-
-
-
+###############################
 #sg_alb_web
 
 variable "ingress_rules_web" {
@@ -188,7 +184,6 @@ variable "tags_sg_web" {
 #sg_alb_app
 variable "ingress_rules_app" {
   type = list(any)
-
 }
 variable "sg_name_app" {
   type = string

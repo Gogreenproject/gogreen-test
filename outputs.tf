@@ -71,3 +71,8 @@ output "sg_rds_id" {
 output subnet_group_id {
   value = module.db_subnet_group.subnet_group_id
 }
+
+#Bastion-Host
+output "bastion_host_sg" {
+ value = module.bastion_host_sg.sg_id
+}
